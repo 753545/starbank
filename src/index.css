@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* Replace 'FactorA-Medium.woff2' with your actual file name and extension */
+@font-face {
+  font-family: 'Factor A';
+  src: url('./assets/FactorA-Medium.ttf') format('truetype'); /* use format('truetype') if .ttf */
+  font-weight: 500;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none; /* Prevents text highlighting like a real app */
+}
+
+body {
+  background-color: #000000; /* Black background outside the app area */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* This creates a "phone" screen on desktop, and fills screen on mobile */
+#root {
+  width: 100%;
+  max-width: 430px; /* iPhone Pro Max width */
+  height: 100dvh;
+  background-color: #F2F2F2;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}

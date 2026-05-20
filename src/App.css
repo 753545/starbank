@@ -1,0 +1,696 @@
+.app-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s ease;
+}
+
+/* --- TAB BACKGROUND ENFORCEMENT --- */
+.app-wrapper.tab-home {
+  background-color: #F2F2F2;
+}
+.app-wrapper.tab-earn {
+  background-color: #F2F2F2;
+}
+.app-wrapper.tab-shop {
+  background-color: #FBFBFB; /* Contrast backing for active white cards */
+}
+
+/* --- SEAMLESS ANIMATED BACKGROUND --- */
+.animated-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.8;
+  z-index: 1;
+  animation: slideBg 15s linear infinite; 
+}
+
+@keyframes slideBg {
+  from { background-position: 0 0; }
+  to { background-position: -80px -80px; }
+}
+
+/* --- INLINE CURRENCY CUSTOM SVG --- */
+.star-inline {
+  height: 0.9em;
+  width: auto;
+  vertical-align: middle;
+  margin-left: 2px;
+  position: relative;
+  top: -1px;
+}
+
+/* --- CONTENT AREA & SCROLL CONTROLS --- */
+.content-area {
+  position: relative;
+  z-index: 2;
+  flex-grow: 1;
+  padding: 10px;
+  overflow-y: auto;
+  padding-bottom: 110px; /* Safe clearing above the absolute nav bar */
+  
+  /* Disable scrollbar lines completely */
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+.content-area::-webkit-scrollbar {
+  display: none; /* Safely disables webkit browser bars */
+}
+
+.cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* 3D Transform perspective base */
+.bank-card {
+  height: 240px;
+  border-radius: 24px;
+  padding: 16px;
+  padding-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.1s ease-out; /* Real-time interactive response speed */
+  transform-style: preserve-3d;
+}
+
+.card-name {
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: auto;
+}
+
+.card-balance-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 2px;
+  line-height: normal;
+  align-items: baseline;
+}
+
+.card-balance {
+  font-family: 'Factor A', sans-serif;
+  font-size: 67px;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+}
+
+.star-currency-icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* --- ABSOLUTE BOTTOM NAVIGATION BAR --- */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: linear-gradient(to top, rgba(242, 242, 242, 0.95) 75%, rgba(242, 242, 242, 0) 100%);
+  padding: 16px 12px 32px 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+/* Adjust transparent color blend values on the shop menu tab */
+.tab-shop .bottom-nav {
+  background: linear-gradient(to top, rgba(251, 251, 251, 0.95) 75%, rgba(251, 251, 251, 0) 100%);
+}
+
+.nav-btn {
+  flex: 1;
+  height: 72px;
+  border-radius: 12px;
+  border: none;
+  background-color: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.nav-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.nav-btn.active {
+  background-color: #D7DFE5;
+}
+
+.nav-profile-avatar {
+  width: 33px;
+  height: 33px;
+  border-radius: 50%;
+}
+
+/* --- IOS LOCK SCREEN OVERLAY --- */
+.pin-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #F2F2F2;
+  z-index: 100;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pin-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 90px;
+  position: relative;
+}
+
+.pin-pill {
+  padding: 4px 24px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 500;
+  font-size: 16px;
+  letter-spacing: 1.5px;
+}
+
+.pin-dots {
+  display: flex;
+  gap: 16px;
+  margin-top: 36px;
+  margin-bottom: 48px;
+}
+
+.dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 3px solid white;
+  background-color: transparent;
+  transition: background-color 0.1s ease;
+}
+
+.dot.filled {
+  background-color: white;
+}
+
+/* Keypad Layout */
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: 80%;
+  max-width: 320px;
+}
+
+.numpad-btn {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: none;
+  background-color: #FFFFFF;
+  color: #202020;
+  font-family: 'Factor A', sans-serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.numpad-btn:active {
+  background-color: #E6ECEF;
+}
+
+.numpad-spacer {
+  width: 100%;
+}
+
+/* Drag to dismiss Handle */
+.drag-handle {
+  width: 100%;
+  height: 50px;
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.drag-line {
+  width: 120px;
+  height: 5px;
+  border-radius: 3px;
+  background-color: #FFFFFF;
+}
+
+/* --- BOTTOM-UP SLIDING PANELS (Customize & Transfer) --- */
+.sliding-panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-height: 75%;
+  background-color: #F2F2F2;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  z-index: 110; /* Sits above standard absolute bottom nav bar */
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.sliding-panel.open {
+  transform: translateY(0);
+}
+
+.panel-header {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.drag-bar {
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background-color: #CCD3D9;
+  cursor: pointer;
+}
+
+.panel-header h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: #8E9296;
+}
+
+.panel-body {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Design picker layouts */
+.design-options h4 {
+  font-size: 12px;
+  color: #8E9296;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.design-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.design-grid button {
+  height: 60px;
+  border-radius: 12px;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+/* Star Transfer Forms styles */
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.transfer-target-desc {
+  font-size: 18px;
+  color: #202020;
+}
+
+.transfer-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.transfer-input {
+  width: 100%;
+  height: 60px;
+  border-radius: 12px;
+  border: none;
+  background-color: #FFFFFF;
+  padding: 16px;
+  padding-right: 48px;
+  font-family: 'Factor A', sans-serif;
+  font-size: 24px;
+}
+
+.transfer-star {
+  position: absolute;
+  right: 16px;
+  color: #202020;
+  height: 24px !important;
+  width: auto !important;
+}
+
+.confirm-transfer-btn {
+  height: 60px;
+  border-radius: 12px;
+  border: none;
+  background-color: #202020;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* --- CARD DETAILS PAGE --- */
+.card-details-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sub-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-action-btn {
+  background-color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  padding: 18px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 500;
+  color: #202020;
+  text-align: center;
+  cursor: pointer;
+}
+
+.menu-action-btn:active {
+  background-color: #F8FAF9;
+}
+
+/* --- HISTORY SECTION --- */
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.history-header {
+  font-size: 16px;
+  color: #8E9296;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.05em;
+  padding-bottom: 10px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 16px;
+  border-radius: 12px;
+  height: 52px;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: 'Factor A', sans-serif;
+}
+
+.history-badge {
+  padding: 2px 8px;
+  border-radius: 20px;
+  color: white;
+  font-size: 18px;
+  font-family: 'Factor A', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.history-item.positive {
+  background-color: #CDFF5F;
+  color: #153F00;
+}
+.history-item.positive .history-badge {
+  background-color: #0F5E1C;
+}
+
+.history-item.neutral {
+  background-color: #FFFFFF;
+  color: #202020;
+}
+.history-item.neutral .history-badge {
+  background-color: #202020;
+}
+
+.history-item.negative {
+  background-color: #421A1B;
+  color: #FFAEAE;
+}
+.history-item.negative .history-badge {
+  background-color: #FF2E2E;
+}
+
+/* --- ACHIEVEMENTS SCREEN --- */
+.achievements-screen {
+  margin-top: 10px;
+}
+
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.achievement-card {
+  background-color: #C2FF53;
+  border-radius: 24px;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.achievement-card:active {
+  transform: scale(0.97);
+}
+
+.achievement-title {
+  color: #0D3E10;
+  font-family: 'Factor A', sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+.achievement-badge {
+  background-color: #0F5E1C;
+  color: #FFFFFF;
+  font-family: 'Factor A', sans-serif;
+  font-size: 22px;
+  font-weight: 500;
+  padding: 4px 16px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Feedback states */
+.achievement-success-info {
+  font-family: 'Factor A', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: #0F5E1C;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.success-pulse {
+  animation: successPulseBg 2.5s ease-out;
+}
+
+@keyframes successPulseBg {
+  0% { background-color: #C2FF53; }
+  10% { background-color: #FFFFFF; transform: scale(1.02); }
+  90% { background-color: #FFFFFF; transform: scale(1); }
+  100% { background-color: #C2FF53; }
+}
+
+.denied-shake {
+  animation: lockShake 0.4s ease-in-out;
+}
+
+@keyframes lockShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* --- SHOP SCREEN (Full-Width stacked column layout) --- */
+.shop-screen {
+  margin-top: 20px;
+}
+
+.shop-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Perfect spacing between stacked large circles */
+  align-items: center;
+  padding: 10px 6px 20px 6px; /* Spanning page padding layout */
+}
+
+.shop-card-wrapper {
+  position: relative;
+  width: 100%; /* Spans full width dynamically */
+  max-width: 380px; /* Safe bounds clamp */
+  aspect-ratio: 1; /* perfect layout container */
+}
+
+.shop-price-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #202020;
+  color: #FFFFFF;
+  padding: 4px 16px;
+  border-radius: 24px;
+  font-family: 'Factor A', sans-serif;
+  font-size: 32px;
+  font-weight: 500;
+  z-index: 5;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.shop-circle-outer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible; 
+}
+
+/* Image Rewards */
+.shop-image-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #F2F2F2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.shop-reward-image {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  mix-blend-mode: darken;
+}
+
+/* Text Reward vinyl layout */
+.text-disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #C2FF5F;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  touch-action: none; 
+  box-sizing: border-box;
+}
+
+.text-disc:active {
+  cursor: grabbing;
+}
+
+.disc-label {
+  font-family: 'Factor A', sans-serif;
+  font-size: 36px;
+  font-weight: 500;
+  color: #005C6D;
+  text-align: center;
+  user-select: none;
+}
+
+/* SVG Radial Progress Arc styles */
+.radial-progress-svg {
+  position: absolute;
+  top: -5%;
+  left: -5%;
+  width: 110%;
+  height: 110%;
+  z-index: 3;
+  pointer-events: none; 
+}
+
+/* Opacity reduction lock state */
+.interaction-locked {
+  opacity: 0.6;
+}
+
+/* Simple fade */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
