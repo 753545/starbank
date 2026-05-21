@@ -75,8 +75,11 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden; /* THIS FIXES YOUR SHOP HORIZONTAL SCROLL BUG! */
   padding: 10px;
-  padding-bottom: 110px; /* Safe clearing above the absolute nav bar */
+
+  /* Add safe-area-inset-top so content starts below the dynamic island */
+  padding: calc(10px + env(safe-area-inset-top)) 10px 110px 10px; 
   
   /* Disable scrollbar lines completely */
   -ms-overflow-style: none;  
@@ -97,6 +100,7 @@
 
 /* 3D Transform perspective base */
 .bank-card {
+  position: relative;
   height: 240px;
   border-radius: 24px;
   padding: 16px;
@@ -106,9 +110,41 @@
   justify-content: space-between;
   color: white;
   cursor: pointer;
-  transition: transform 0.1s ease-out; /* Real-time interactive response speed */
+  transition: transform 0.1s ease-out; 
   transform-style: preserve-3d;
+  overflow: hidden; /* Crucial to keep the video background clipped inside the card */
+  z-index: 5;
 }
+
+.card-bg-fill {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+.card-video-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+.card-content-layer {
+  position: relative;
+  z-index: 15;
+  transform: translateZ(15px); /* Push the texts forward in 3D space, past the sticker's 5px depth */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  pointer-events: none; /* Allows click events to pass through to stickers behind it */
+}
+
 
 .card-name {
   font-size: 18px;
@@ -136,6 +172,59 @@
   width: 40px;
   height: 40px;
 }
+
+/* --- STICKER ENGINE STYLES --- */
+.stickers-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10;
+  pointer-events: auto;
+  transform: translateZ(5px); /* Floats the stickers slightly above the card surface in 3D */
+}
+
+.card-sticker {
+  position: absolute;
+  top: 0; left: 0;
+  transform-origin: center center;
+  touch-action: none; /* Prevents iOS from scrolling the whole page while dragging/pinching */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.card-sticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.card-sticker.custom-camera img {
+  border-radius: 16px;
+  object-fit: cover; /* Keeps custom user camera photos squared off beautifully */
+}
+
+.card-sticker.active {
+  outline: 2px dashed rgba(255, 255, 255, 0.8);
+  outline-offset: 4px;
+}
+
+.sticker-delete-btn {
+  position: absolute;
+  top: -15px; right: -15px;
+  width: 30px; height: 30px;
+  border-radius: 15px;
+  background: #FF2E2E;
+  color: white;
+  font-weight: bold;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+  cursor: pointer;
+  z-index: 20;
+}
+
 
 /* --- ABSOLUTE BOTTOM NAVIGATION BAR --- */
 .bottom-nav {
@@ -214,8 +303,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding-top: 90px;
-  position: relative;
+  padding-top: calc(90px + env(safe-area-inset-top)); 
+  position: relative; 
 }
 
 .pin-pill {
@@ -688,6 +777,118 @@
 
 
 
+/* --- CUSTOMIZE TAB LAYOUT --- */
+.customize-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: #E6ECEF;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.cust-tab-btn {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'IBM Plex Mono';
+  font-weight: 500;
+  font-size: 14px;
+  color: #8E9296;
+  background: transparent;
+  cursor: pointer;
+}
+
+.cust-tab-btn.active {
+  background: white;
+  color: #202020;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.design-grid button video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.color-picker-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 2px solid white;
+  height: 60px;
+  background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.color-picker-wrap input[type="color"] {
+  position: absolute;
+  opacity: 0;
+  width: 200%;
+  height: 200%;
+  cursor: pointer;
+}
+
+.color-picker-wrap span {
+  pointer-events: none;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  font-family: sans-serif;
+  font-size: 24px;
+}
+
+.stickers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.sticker-item-btn {
+  height: 80px;
+  border-radius: 16px;
+  border: none;
+  background: #FFFFFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.sticker-item-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.camera-sticker-btn {
+  background: #CDFF5F;
+  color: #153F00;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'IBM Plex Mono';
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  position: relative;
+}
+
+.camera-sticker-btn input[type="file"] {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
 
 /* ========================================================= */
 /* --- MANAGER DASHBOARD PORTAL (Desktop styles) --- */
@@ -833,3 +1034,188 @@
 .preview-controls button:disabled { opacity: 0.3; cursor: not-allowed; }
 .preview-controls .btn-delete { color: #FEB2B2; }
 .preview-controls .btn-delete:hover { background-color: #E53E3E; color: white; }
+
+/* --- ADMIN STICKERS & VIDEOS TAB --- */
+.admin-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.admin-asset-item {
+  background: #2D3748;
+  border-radius: 12px;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #4A5568;
+}
+
+.admin-asset-item img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.admin-asset-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-asset-item button {
+  position: absolute;
+  top: 4px; right: 4px;
+  background: #E53E3E;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+
+/* --- ISOLATED CARD DESIGNER SANDBOX --- */
+.designer-sandbox {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: #F2F2F2;
+  z-index: 120; /* Mounts above the standard application tabs */
+  display: flex;
+  flex-direction: column;
+}
+
+.designer-card-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-image: radial-gradient(circle, #E1E8EC 10%, transparent 11%);
+  background-size: 16px 16px;
+}
+
+/* Enforcing strict card surface clipping bounds */
+.designer-restricted-card {
+  width: 100%;
+  max-width: 380px;
+  overflow: hidden; /* Clips elements extending past card borders */
+  position: relative;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+.stickers-layer-restricted {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Sticker Bounding Box Outlines */
+.designer-sticker {
+  position: absolute;
+  top: calc(50% - 35px); /* Centers elements dynamically on initial drop */
+  left: calc(50% - 35px);
+  transform-origin: center center;
+  touch-action: none;
+  cursor: grab;
+}
+
+.designer-sticker img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+}
+
+.designer-sticker.custom-camera img {
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Dotted bounding outline on selected sticker */
+.designer-sticker.active {
+  outline: 2px dotted #CCD3D9;
+}
+
+/* Customizer Handles Styling */
+.stkr-del-handle {
+  position: absolute;
+  top: -12px; left: -12px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #FF2E2E; color: white;
+  font-family: Arial, sans-serif; font-size: 11px; font-weight: bold;
+  display: flex; justify-content: center; align-items: center;
+  border: 2px solid white; cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.stkr-ctrl-handle {
+  position: absolute;
+  bottom: -12px; right: -12px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: #CDFF5F; color: #153F00;
+  font-size: 11px;
+  display: flex; justify-content: center; align-items: center;
+  border: 2px solid white; cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Customized Bottom Drawer Control elements */
+.designer-control-drawer {
+  background-color: #FFFFFF;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  box-shadow: 0 -8px 24px rgba(0,0,0,0.06);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.designer-drawer-body {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.designer-footer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* --- STORE PURCHASING UI --- */
+.sticker-lock-badge {
+  position: absolute;
+  bottom: 4px; right: 4px;
+  background: rgba(32, 32, 32, 0.9);
+  color: #CDFF5F;
+  font-family: 'Factor A', sans-serif;
+  font-size: 11px; font-weight: bold;
+  padding: 2px 6px; border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  display: flex; align-items: center; gap: 1px;
+}
+
+.designer-error-toast {
+  position: absolute;
+  top: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: #FF2E2E; color: white;
+  padding: 8px 16px; border-radius: 20px;
+  font-family: 'IBM Plex Mono'; font-size: 14px; font-weight: bold;
+  box-shadow: 0 4px 12px rgba(255,46,46,0.3);
+  z-index: 130;
+  animation: lockShake 0.4s ease-in-out;
+}
