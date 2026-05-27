@@ -1,26 +1,56 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Other stuff like <title> is here... -->
-  
+    <meta charset="UTF-8" />
+    <title id="app-page-title">StarBank</title>
+
+    <!-- PWA Manifests (dynamic) -->
+    <link id="app-manifest" rel="manifest" href="/starbank/manifest.json">
+    <link id="app-favicon" rel="icon" type="image/png" href="/starbank/assets/star-c-knqSTf.png" />
+
     <!-- 1. Tells iOS to hide Safari UI and treat it as an app -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     
     <!-- 'black-translucent' allows the app to draw under the top status bar -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
       
-    <!-- 3. The name that appears under the icon on the iPhone Desktop -->
-    <meta name="apple-mobile-web-app-title" content="StarBank">
+    <!-- 3. The name that appears under the icon on the iPhone Desktop (dynamic) -->
+    <meta id="apple-app-title" name="apple-mobile-web-app-title" content="StarBank">
     
     <!-- 'viewport-fit=cover' tells the browser to stretch all the way into the notch/island -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <!-- Optional: Add an icon! Save a square image as apple-touch-icon.png in your public folder -->
-    <link rel="apple-touch-icon" href="/starbank/apple-touch-icon.png">
-    <script type="module" crossorigin src="/starbank/assets/index-D1uBDgPm.js"></script>
-    <link rel="stylesheet" crossorigin href="/starbank/assets/index-CUDak_aX.css">
+    <!-- Apple-touch-icons (dynamic) -->
+    <link id="apple-touch-icon" rel="apple-touch-icon" href="/starbank/apple-touch-icon.png">
+
+    <!-- Dynamic PWA Engine Script -->
+    <script>
+      (function() {
+        const isAdmin = window.location.search.includes('admin=true');
+        if (isAdmin) {
+          // Update Page Title
+          document.title = "StarManager";
+
+          // Update Android PWA elements
+          const manifestTag = document.getElementById('app-manifest');
+          if (manifestTag) manifestTag.setAttribute('href', '/manifest-admin.json');
+
+          const faviconTag = document.getElementById('app-favicon');
+          if (faviconTag) faviconTag.setAttribute('href', '/src/assets/star_dark.png');
+
+          // Update iOS stand-alone app elements
+          const appleTitleTag = document.getElementById('apple-app-title');
+          if (appleTitleTag) appleTitleTag.setAttribute('content', 'StarManager');
+
+          const appleTouchIconTag = document.getElementById('apple-touch-icon');
+          if (appleTouchIconTag) appleTouchIconTag.setAttribute('href', '/apple-touch-icon-admin.png');
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/starbank/assets/index-TXnQktiK.js"></script>
+    <link rel="stylesheet" crossorigin href="/starbank/assets/index-C5e3ZMDh.css">
   </head>
-    <body>
+  <body>
     <div id="root"></div>
   </body>
 </html>
